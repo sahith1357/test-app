@@ -22,6 +22,7 @@ Features present in the source:
 ```text
 .
 ├── .DS_Store       # macOS Finder metadata (binary; not application source)
+├── README.md       # Project overview and developer documentation
 ├── colors.js       # ANSI color helpers
 ├── index.js        # CLI entry point and quiz/menu orchestration
 ├── input.js        # Readline prompts and selection helpers
