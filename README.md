@@ -57,7 +57,7 @@ There are no runtime dependencies listed in `package.json`; the implementation u
    npm start
    ```
 
-**Current checkout limitation:** As committed, `index.js` resolves its support files from `src/` and its question data from `data/`, but the repository contains those files at the root instead. Node will therefore fail to resolve the imports before starting the game. To run the application, first align the layout and references—for example, place the modules under `src/` and the JSON under `data/`, or update `index.js` to reference the root-level files. This README records the observed mismatch rather than claiming that the start command currently works.
+**Current checkout limitation:** As committed, `index.js` imports `./src/input.js`, `./src/quiz.js`, and `./src/colors.js`, and attempts to load `data/questions.json`. In the repository tree, the modules and `questions.json` are at the root, not in `src/` or `data/`. Consequently, `npm start` fails during module resolution before the game begins. Before running, align the code and file layout: either move the three modules into `src/` and `questions.json` into `data/`, or change the imports and question-data path in `index.js` to point to the root-level files. No such correction is included in this repository snapshot.
 
 ## Usage Examples
 
