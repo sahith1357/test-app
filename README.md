@@ -46,8 +46,8 @@ There are no runtime dependencies listed in `package.json`; the implementation u
 1. Clone the repository and enter its directory:
 
    ```sh
-   git clone <repository-url>
-   cd <repository-directory>
+   git clone https://github.com/sahith1357/test-app.git
+   cd test-app
    ```
 
 2. Install dependencies if you add any to the project. The current manifest has none, so there is no dependency installation step required.
