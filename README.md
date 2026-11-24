@@ -1,107 +1,140 @@
 # Quiz CLI
 
-An interactive command-line quiz game for learning JavaScript, Node.js, and general programming concepts. It presents multiple-choice questions, gives immediate feedback and explanations, tracks a score, and reviews incorrect answers at the end of a quiz.
+An interactive command-line quiz game for JavaScript, Node.js, and general programming concepts. The application presents multiple-choice questions, gives immediate feedback, tracks scores, and offers a review of incorrect answers.
 
-> **Repository layout note:** The checked-in files are at the repository root, but `index.js` imports `./src/input.js`, `./src/quiz.js`, and `./src/colors.js`, and loads `data/questions.json`. Those paths are not present in the current repository tree (`input.js`, `quiz.js`, `colors.js`, and `questions.json` are at the root). Consequently, `npm start` cannot run successfully as currently laid out. See [Setup](#setup) for details; the documentation does not assume those missing paths exist.
+> **Important: the current checkout does not start as configured.** `index.js` imports modules from `./src/` and reads questions from `data/questions.json`, but all four files are currently at the repository root. As a result, `npm start` fails during module resolution until the import paths and data path or repository layout are corrected. Details are in [Setup](#setup).
 
-## Project Overview
+## Contents
 
-Quiz CLI is a terminal-based learning game implemented with Node.js ES modules. The package manifest identifies it as `quiz-cli` version `1.0.0`, describes it as an interactive command-line quiz game for learning JavaScript, and declares no third-party dependencies.
+- [Project overview](#project-overview)
+- [File structure](#file-structure)
+- [Setup](#setup)
+- [Usage](#usage)
+- [Additional details](#additional-details)
+- [Question data format](#question-data-format)
+- [Contributing and license](#contributing-and-license)
 
-Features present in the source:
+## Project overview
 
-- Three quiz categories: JavaScript Basics, Node.js Fundamentals, and General Programming.
-- Interactive numbered menus for choosing a category and question count.
-- Shuffled question order, progress display, immediate right/wrong feedback, and optional explanations.
-- End-of-quiz score, performance message, and review of incorrect answers.
-- ANSI terminal styling implemented in project code without an external color package.
-- A replay prompt after each quiz.
+Quiz CLI is a Node.js application using ES modules and built-in Node APIs. It has no third-party dependencies. The checked-in question bank contains three categories with five questions apiece.
 
-## File Structure
+Features implemented in the source:
+
+- JavaScript Basics, Node.js Fundamentals, and General Programming categories.
+- Numbered prompts for category, question-count, and answer selection.
+- Question progress display, immediate right/wrong feedback, and explanations when supplied in the question data.
+- Final score, percentage-based performance message, and review of incorrect answers.
+- Replay prompt and ANSI escape-code terminal styling.
+
+## File structure
 
 ```text
 .
-├── .DS_Store       # macOS Finder metadata (binary; not application source)
-├── README.md       # Project overview and developer documentation
-├── colors.js       # ANSI color helpers
-├── index.js        # CLI entry point and quiz/menu orchestration
-├── input.js        # Readline prompts and selection helpers
-├── package.json    # Package metadata and npm scripts
-├── questions.json  # Question data organized by category
+├── README.md       # Project documentation
+├── colors.js       # ANSI styling helpers
+├── index.js        # Application entry point, menu flow, and question loading
+├── input.js        # Readline-based prompts and selection helpers
+├── package.json    # Package metadata, Node requirement, and npm scripts
+├── questions.json  # Question bank organized by category
 └── quiz.js         # Quiz state, question flow, scoring, and results
 ```
+
+The code imports expect a different layout (`src/` for the JavaScript modules and `data/` for the question bank). The tree above reflects the actual checked-in layout, not the paths the entry point currently expects.
 
 ## Setup
 
 ### Prerequisites
 
-- Node.js **18.0.0 or later**, as declared in `package.json`.
-- npm, which is distributed with Node.js.
-- An interactive terminal for answering prompts.
+- Node.js 18 or later (the package declares `"engines": { "node": ">=18.0.0" }`).
+- npm, distributed with Node.js.
+- An interactive terminal.
 
-There are no runtime dependencies listed in `package.json`; the implementation uses Node.js built-in modules (`node:fs/promises`, `node:path`, `node:url`, and `node:readline`). No environment variables are defined or required by the checked-in source.
+No environment variables are required or documented. No external packages are listed in `package.json`, so dependency installation is not necessary for the current manifest.
 
-### Install and run
+### Get the source
 
-1. Clone the repository and enter its directory:
+```sh
+git clone https://github.com/sahith1357/test-app.git
+cd test-app
+```
 
-   ```sh
-   git clone https://github.com/sahith1357/test-app.git
-   cd test-app
-   ```
+### Startup path mismatch
 
-2. Install dependencies if you add any to the project. The current manifest has none, so there is no dependency installation step required.
-3. Run the configured start script:
+The `start` script runs `node index.js`, but the entry point imports `./src/input.js`, `./src/quiz.js`, and `./src/colors.js`, and tries to read `data/questions.json`. These paths are absent in the current repository: `input.js`, `quiz.js`, `colors.js`, and `questions.json` are all in the root directory. Therefore, **`npm start` currently fails before the interactive quiz can begin**.
 
-   ```sh
-   npm start
-   ```
-
-**Current checkout limitation:** As committed, `index.js` imports `./src/input.js`, `./src/quiz.js`, and `./src/colors.js`, and attempts to load `data/questions.json`. In the repository tree, the modules and `questions.json` are at the root, not in `src/` or `data/`. Consequently, `npm start` fails during module resolution before the game begins. Before running, align the code and file layout: either move the three modules into `src/` and `questions.json` into `data/`, or change the imports and question-data path in `index.js` to point to the root-level files. No such correction is included in this repository snapshot.
-
-## Usage Examples
-
-Once the path mismatch described above is corrected, start the interactive game with:
+To make it runnable, correct the paths/layout in the code (for example, align the imports and question-data path to the files' root locations) or move files to the directories the entry point expects. No such code/layout fix is included here. After fixing the mismatch, run:
 
 ```sh
 npm start
 ```
 
-The intended session flow is:
+There is no `npm install` step needed unless dependencies are added in a future change.
 
-1. Choose a category from the displayed numbered list.
-2. Choose all available questions, or choose 3 or 5 when that many questions exist in the category.
-3. Press Enter to begin, then enter the number corresponding to each answer choice.
-4. Review feedback after each answer; the game shows an explanation when the question has one.
-5. See the final score and any incorrect answers, then answer `y` to play another round or `n` to exit.
+## Usage
 
-The category data in `questions.json` currently contains five questions for each of the three categories. Each question provides an `options` array, a zero-based `answer` index, and an optional `explanation`. The menu displays options with one-based numbers, which the input helper converts to a zero-based index for scoring.
+After resolving the startup path mismatch, launch the app in an interactive terminal:
 
-## Additional Details
+```sh
+npm start
+```
 
-### Project behavior and implementation
+The intended flow implemented by the CLI is:
 
-- `index.js` loads JSON data, builds category and question-count menus, and runs the replay loop.
-- `input.js` wraps Node's `readline` interface in Promise-based prompt, selection, confirmation, and Enter-to-continue helpers.
-- `quiz.js` shuffles each selected set of questions with Fisher–Yates, maintains progress and score, and prints results and incorrect-answer review.
-- `colors.js` provides ANSI escape-code styling helpers. Color support is not configurable through package settings.
-- The game selects the first `N` questions in the category data before shuffling that selection; choosing 3 or 5 therefore does not randomly sample from the entire category.
+1. Enter the number for one of the three categories.
+2. Select **All questions**, **3 questions**, or **5 questions** (choices are limited to counts supported by that category).
+3. Press Enter to begin and enter the number of your answer choice for each question.
+4. Read immediate correctness feedback and any available explanation; press Enter between questions.
+5. Review your score and incorrect answers, then answer `y` to replay or `n` to exit.
+
+> Selecting 3 or 5 takes the first 3 or 5 questions in the category's JSON order and then shuffles that selected subset. It does **not** randomly sample those counts from all questions in the category.
+
+## Additional details
+
+### Runtime behavior and architecture
+
+- `index.js` loads `questions.json`, creates category and question-count menus, and manages the quiz/replay flow.
+- `input.js` provides Promise-based wrappers for Node's built-in `readline` input, numbered selection, yes/no confirmation, and Enter prompts.
+- `quiz.js` shuffles the provided question set using Fisher–Yates, tracks progress and score, presents feedback, and renders the results and missed-question review.
+- `colors.js` applies ANSI escape sequences for terminal styling; the implementation does not rely on a third-party color package.
+- Answer choices displayed to the player are numbered starting at 1; the stored `answer` field is a zero-based index.
 
 ### Scripts and tests
 
-The package defines these npm scripts:
+The package defines these scripts:
 
 ```sh
 npm start  # node index.js
 npm test   # node --test
 ```
 
-No test files are present in the repository tree, so the test script invokes Node's test runner without project tests currently checked in.
+There are no test files checked into the current repository. `npm test` invokes Node's built-in test runner, but there are currently no project tests for it to run.
 
-### Question data format
+## Question data format
 
-Question categories are stored under the top-level `categories` object in `questions.json`. A category has a display `name` and a `questions` list. Each question contains its prompt, choices, the index of the correct choice, and optionally an explanation. Keep the answer index aligned with the corresponding position in `options` (the first option has index `0`).
+`questions.json` stores categories under the top-level `categories` object. Each category has a display `name` and a `questions` array. Each question has a `question` string, an `options` array, a zero-based `answer` index pointing to the correct option, and optionally an `explanation` string.
 
-### Contribution and license
+Example shape:
 
-No contribution guidelines are present in the checked-in files. `package.json` declares the project license as **MIT**; consult the repository's license file if one is added, since no separate license text appears in the current file listing.
+```json
+{
+  "categories": {
+    "sample": {
+      "name": "Sample Category",
+      "questions": [
+        {
+          "question": "Example question?",
+          "options": ["First", "Second"],
+          "answer": 1,
+          "explanation": "The second option is correct."
+        }
+      ]
+    }
+  }
+}
+```
+
+Keep each `answer` index aligned with its option's position: the first option is index `0`, the second is index `1`, and so on. Explanations are optional.
+
+## Contributing and license
+
+No separate contribution guide or `LICENSE` file is present in the checked-in repository. `package.json` declares the package license as MIT; the repository does not include a standalone license text in the current file listing.
